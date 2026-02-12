@@ -12,14 +12,16 @@
       <div style="color: white">Will You Be Oleksii's Valentine?</div>
       <div class="dialog-buttons">
         <button class="fall-button" @click="answerYes">Yes</button>
-        <button ref="runawayAskRef" class="fall-button runaway" :style="{ transform: `translate(${runawayAskOffset.x}px, ${runawayAskOffset.y}px)` }" @mouseover="moveRunawayAsk" @click="answerNo">No</button>
+        <button v-if="!noConverted" ref="runawayAskRef" class="fall-button runaway" :style="{ transform: `translate(${runawayAskOffset.x}px, ${runawayAskOffset.y}px)` }" @mouseover="moveRunawayAsk" @click="handleNoClick">No</button>
+        <button v-else class="fall-button converted" @click="answerYes">Yes of course</button>
       </div>
     </template>
 
     <template v-if="dialogStep === 'sure'">
       <div style="color: white">Are you sure?</div>
       <div class="dialog-buttons">
-        <button ref="runawayRef" class="fall-button runaway" :style="{ transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)` }" @mouseover="moveRunaway" @click="sureYes">Yes</button>
+        <button v-if="!sureConverted" ref="runawayRef" class="fall-button runaway" :style="{ transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)` }" @mouseover="moveRunaway" @click="handleSureYesClick">Yes</button>
+        <button v-else class="fall-button converted" @click="sureYes">Yes of course</button>
         <button class="fall-button" @click="sureNo">No</button>
       </div>
     </template>
@@ -138,14 +140,36 @@ function riseFlowers() {
   rising.value = true
 }
 
+const noConverted = ref(false)
+const sureConverted = ref(false)
+
+const isTouchDevice = computed(() => 'ontouchstart' in window || navigator.maxTouchPoints > 0)
+
 function answerYes() {
   dialogStep.value = 'party'
   startParty()
 }
 
+function handleNoClick() {
+  if (isTouchDevice.value) {
+    noConverted.value = true
+  } else {
+    answerNo()
+  }
+}
+
 function answerNo() {
   dialogStep.value = 'sure'
+  noConverted.value = false
   dropFlowers()
+}
+
+function handleSureYesClick() {
+  if (isTouchDevice.value) {
+    sureConverted.value = true
+  } else {
+    sureYes()
+  }
 }
 
 function sureYes() {
@@ -200,6 +224,8 @@ function sureNo() {
   dialogStep.value = 'ask'
   runawayOffset.value = { x: 0, y: 0 }
   runawayAskOffset.value = { x: 0, y: 0 }
+  noConverted.value = false
+  sureConverted.value = false
   riseFlowers()
 }
 
@@ -454,5 +480,16 @@ const gridStyle = computed(() => ({
     position: relative;
     transition: transform 0.2s ease;
   }
+
+  &.converted {
+    background: rgba(255, 100, 150, 0.3);
+    border-color: rgba(255, 100, 150, 0.5);
+    animation: gentle-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { background: rgba(255, 100, 150, 0.3); }
+  50% { background: rgba(255, 100, 150, 0.5); }
 }
 </style>
