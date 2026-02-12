@@ -33,13 +33,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-import flower1 from '@/assets/images/flower_1.png'
-import flower2 from '@/assets/images/flower_2.png'
-import flower3 from '@/assets/images/flower_3.png'
-import flower4 from '@/assets/images/flower_4.png'
-import flower5 from '@/assets/images/flower_5.png'
-import flower6 from '@/assets/images/flower_6.png'
-import partyMusic from '@/assets/music/partyonwebbi.wav'
+import flower1 from '@/assets/images/photo1.jpg'
+import flower2 from '@/assets/images/photo2.png'
+import flower3 from '@/assets/images/photo3.jpg'
+import flower4 from '@/assets/images/photo4.jpg'
+import flower5 from '@/assets/images/photo5.png'
+import flower6 from '@/assets/images/photo6.png'
+import partyMusic from '@/assets/music/smaragdove_nebo.mp3'
 
 const images = [flower1, flower2, flower3, flower4, flower5, flower6]
 const audio = new Audio(partyMusic)
