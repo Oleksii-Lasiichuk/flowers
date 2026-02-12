@@ -9,10 +9,10 @@
     <button class="close-button" @click="closeDialog">&times;</button>
 
     <template v-if="dialogStep === 'ask'">
-      <div style="color: white">Anja, will you be my valentine?</div>
+      <div style="color: white">Will You Be Oleksii's Valentine?</div>
       <div class="dialog-buttons">
         <button class="fall-button" @click="answerYes">Yes</button>
-        <button class="fall-button" @click="answerNo">No</button>
+        <button ref="runawayAskRef" class="fall-button runaway" :style="{ transform: `translate(${runawayAskOffset.x}px, ${runawayAskOffset.y}px)` }" @mouseover="moveRunawayAsk" @click="answerNo">No</button>
       </div>
     </template>
 
@@ -57,7 +57,14 @@ function onResize() {
   height.value = window.innerHeight
 }
 
-onMounted(() => window.addEventListener('resize', onResize))
+onMounted(() => {
+  window.addEventListener('resize', onResize)
+  // Auto-open the valentine dialog when page loads
+  setTimeout(() => {
+    dialogStep.value = 'ask'
+    dialogRef.value?.showModal()
+  }, 500)
+})
 onUnmounted(() => window.removeEventListener('resize', onResize))
 
 const isMobile = computed(() => width.value < 768)
@@ -148,6 +155,9 @@ function sureYes() {
 const runawayOffset = ref({ x: 0, y: 0 })
 const runawayRef = ref<HTMLButtonElement>()
 
+const runawayAskOffset = ref({ x: 0, y: 0 })
+const runawayAskRef = ref<HTMLButtonElement>()
+
 function moveRunaway() {
   const dialog = dialogRef.value
   const btn = runawayRef.value
@@ -167,9 +177,29 @@ function moveRunaway() {
   runawayOffset.value = { x, y }
 }
 
+function moveRunawayAsk() {
+  const dialog = dialogRef.value
+  const btn = runawayAskRef.value
+  if (!dialog || !btn) return
+
+  const dialogRect = dialog.getBoundingClientRect()
+  const btnRect = btn.getBoundingClientRect()
+
+  const padding = 16
+  const minX = dialogRect.left + padding - (btnRect.left - runawayAskOffset.value.x)
+  const maxX = dialogRect.right - padding - btnRect.width - (btnRect.left - runawayAskOffset.value.x)
+  const minY = dialogRect.top + padding - (btnRect.top - runawayAskOffset.value.y)
+  const maxY = dialogRect.bottom - padding - btnRect.height - (btnRect.top - runawayAskOffset.value.y)
+
+  const x = minX + Math.random() * (maxX - minX)
+  const y = minY + Math.random() * (maxY - minY)
+  runawayAskOffset.value = { x, y }
+}
+
 function sureNo() {
   dialogStep.value = 'ask'
   runawayOffset.value = { x: 0, y: 0 }
+  runawayAskOffset.value = { x: 0, y: 0 }
   riseFlowers()
 }
 
