@@ -39,7 +39,7 @@ import flower3 from '@/assets/images/photo3.jpg'
 import flower4 from '@/assets/images/photo4.jpg'
 import flower5 from '@/assets/images/photo5.png'
 import flower6 from '@/assets/images/photo6.png'
-import partyMusic from '@/assets/music/smaragdove_nebo.mp3'
+import partyMusic from '@/assets/music/DLvivske.m4a'
 
 const images = [flower1, flower2, flower3, flower4, flower5, flower6]
 const audio = new Audio(partyMusic)
